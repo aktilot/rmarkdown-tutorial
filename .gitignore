@@ -1,3 +1,4 @@
+.DS_Store
 .Rproj.user
 *.Rproj
 .Rhistory
@@ -6,4 +7,5 @@
 *.html
 *.pdf
 *.docx
+*.png
 libs/
