@@ -1,0 +1,102 @@
+---
+title: "Polyglot markdown & callr example"s
+output: html_notebook
+---
+```{r setup}
+library(tidyverse)
+library(callr)
+library(DBI)
+library(reclues)
+```
+
+# Polyglot Markdown!
+
+You can use languages other than R in your code chunks. Python, bash, SQL, Ruby, they're all options!
+
+**R chunk** 
+```{r}
+# Here's a normal R chunk, setting up a SQL database connection
+con <- reclues::get_db()
+```
+
+**SQL chunk** 
+```{sql comment='--', connection=con}
+-- Chunk options: "{sql comment='--', connection=con}"
+select * from crime_scene_report limit 2
+```
+
+To return the result of a SQL query to your Global Environment, add `output.var="reports"` to the chunk options.
+
+```{sql comment='--', connection=con, output.var="reports"}
+select * from crime_scene_report
+```
+
+```{r}
+str(reports)
+```
+
+# Background Jobs
+
+We'll use the `callr` package:
+
+* Your code must be wrapped up as a function using `r_bg()`
+* You need to explicity give `r_bg()` anything from the GE that it needs to run
+* Capture messages and errors by specifying .err and .out files (optional)
+* Running the code chunk submits the job
+
+```{r}
+slow_code <- r_bg(function(x) {
+  require(magrittr)
+  require(dplyr)
+  message("Going to wait a bit so we can see the results of $is.alive()")
+  Sys.sleep(60)
+  
+  crime_summary <- x %>% 
+    group_by(type) %>% 
+    summarize(occurances= n())
+  
+  return(crime_summary)
+  },
+args = list(x = reports), #reports is a dataframe in our global environment
+stdout = "./tmp/callr_example.out",
+stderr = "./tmp/callr_example.err"
+  )
+```
+
+* Check the status of your job with `$is.alive()`
+
+```{r}
+slow_code$is_alive()
+```
+
+* Tip: put your job objects in a list and use `purrr:map(job_list, function(x) x$is.alive)` to quickly see how they're all doing
+
+* Once the job is dead (either finished or errored out), use $get_result() to return the result to your environment
+
+```{r}
+crime_summary <- slow_code$get_result()
+
+crime_summary
+```
+
+* Bonus option: if you want to see if your Notebook will run top to bottom "hands off", put the is_alive() function in a while loop to make the notebook wait until all jobs are done before continuing to run the next chunk. 
+
+```{r}
+job_list <- list(slow_code)
+
+# a list of statuses, TRUE = running, FALSE = finished
+job_progress <- map(job_list, function(x) x$is_alive())
+
+# count how many are still running (TRUE = 1)
+still_running <- Reduce(`+`, job_progress)
+
+# so long as there's 1+ job running, this loop will continue, 
+# and the code chunk won't finish
+while (still_running > 0) {
+  job_progress <- map(job_list, function(x) x$is_alive())
+  still_running <- Reduce(`+`, job_progress)
+}
+
+```
+
+

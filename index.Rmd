@@ -250,7 +250,8 @@ We'll use the `callr` package:
 library(callr)
 
 slow_code <- r_bg(function(x) {
-  
+  require(magrittr) # need to either use package::function() or require()
+  require(dplyr)
   message("Going to wait a bit so we can see the results of $is.alive()")
   Sys.sleep(60)
   

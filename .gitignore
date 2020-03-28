@@ -9,3 +9,4 @@
 *.docx
 *.png
 libs/
+tmp/
