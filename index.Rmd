@@ -30,14 +30,13 @@ We'll cover:
 We'll do this through:
 - Quick overview of the RMarkdown universe and key terms
 - Hands on practice creating a well-formatted report
-   - Please install _______ now if you don't have them already
 
 We won't get to:
-- Making presentations with xaringen or beamer
+- Making presentations with xaringan
 - Making a personal website with blogdown
 
 But!! 
-- The last slide will have loads of links with resources to do everything 
+- The last slide will have loads of links with resources to do those things 
 
 ---
 class: inverse, center, middle
@@ -48,28 +47,56 @@ class: inverse, center, middle
 
 # RMarkdown
 
+* Technically, `R Markdown` is an extension of Markdown, a language for authoring formatted documents in plain text 
+
+* Less technically, RMarkdown is a way to mix code with explanatory text in a variety of ways
+
+* Philosophically, RMarkdown can be a gateway to literate programming in R
+  
+  
+  
+.center[![](rmarkdownflow.png)]
+  
+Image credit: [RStudio](https://rmarkdown.rstudio.com/lesson-2.html)
+
 ---
 
 # The world of RMarkdown
 
+* R Notebooks - pieces of R code can be run interactively, showing printed results underneath
+  
+* R Markdown Documents - designed to capture a more static code+text document in a final form like PDF, Word, or HTML
+  
+* Presentations - multiple ways to produce slide decks using R Markdown (4 options within `rmarkdown` itself, plus the `xaringan` package)
+  
+* Websites - R Markdown files combine into a website with the `blogdown` package
 
+* Books - one chaper per R Markdown file, extra functionality from `bookdown`
+
+* And more! 
 ---
 
 # Scenarios
 
-- Researcher: .R files -> Rmd notebooks
-- Data analysts/scientists: authoring reports in PDF, Word, or HTML
-- Show the world: `blogdown`, `flexdashboard`
+* Researcher: .R files -> Rmd notebooks
+
+* Data analysts/scientists: authoring reports in PDF, Word, or HTML
+
+* Show the world: `blogdown`, `flexdashboard`
 
 ---
 
-# Some vocabulary
+# Some vocabulary, from top to bottom
 
-- `code chunk`: 
-- `chunk options`: 
-- `inline code`: 
-- `knit`: 
-- `render`: 
+* `YAML`: the header to every Markdown file, specifies what the output should be and look like
+
+* `code chunk`: a block of code, beginning and ending with 3 back quotes
+
+* `chunk options`: determine how each code chunk behaves, e.g. {r fig.width=8}
+
+* `inline code`: a little piece of code tucked into your text, e.g. to reference a number calculated in a chunk
+
+* `knit`: the process of converting R Markdown (.Rmd) to regular Markdown (.md) via the `knitr` package, and then converting the Markdown to a final output format using the `pandoc` package  
 
 ---
 class: inverse, center, middle
@@ -78,36 +105,32 @@ class: inverse, center, middle
 
 ---
 
-# From Rscripts to R Notebooks
-
-1. Open the **analysis1.R** file 
-2. Create a new RMarkdown document using **New -> R Notebook**
-3. Try migrating everything from the .R file to the new R Notebook
-4. When you're ready, save the file and click **Preview**
-
-How did you organize the comments and code from the R script?
-
-Did you use multiple code chunks?
-
-How would you use a Notebook(s) to capture the research process?
-
----
-
 # Building a report
 
+## Exercise
 1. Create a new RMarkdown document using **New -> R Markdown...**
-2. Give your new file a Title and Author in the window that pops up
-3. Check out and save your new file!
-4. Click **Knit** to create the rendered HTML file
 
+2. Give your new file a Title and Author in the window that pops up
+
+3. Check out the and save your new file!
+
+## Discuss
+* What Markdown formatting do you see?  
+
+* What's the name of the first code chunk?  
+
+* Notice anything else?
 ---
 
 # Time to knit
 
+## Exercise
 1. **Knit -> Knit to HTML**
   - Usually goes smoothly 
+  
 2. **Knit -> Knit to Word**
   - If you have MS Word, this usually works fine
+  
 3. **Knit -> Knit to PDF**
   - Get an error message? 
   - Is it about not having a LaTeX installation?
@@ -115,31 +138,54 @@ How would you use a Notebook(s) to capture the research process?
      1. `install.packages("tinytex")`
      2. `tinytex::install_tinytex()`
      3. Try knitting to PDF again
-     
+
+---
+
+# From Rscripts to R Notebooks
+
+## Exercise  
+1. Open the **tutorial_rscript.R** file 
+
+2. Create a new RMarkdown document using **New -> R Notebook**
+
+3. Try migrating everything from the .R file to the new R Notebook
+
+4. When you're ready, save the file and click **Preview**
+
+
+## Discuss
+* How did you organize the comments and code from the R script?
+
+* Did you use multiple code chunks?
+
+* How would you use a Notebook(s) to capture the research process?
+
 ---
 
 # Let's get fancy!
 
-Folks that have used RMarkdown before - what are some things you always change?
+### Exercise 
+1. Edit the **YAML** header to add:  
+  - A Table of Contents
+  - Code folding (show/hide the code via buttons)
 
-Edit the YAML header to add: 
-- A Table of Contents
-- Code folding (show/hide the code via buttons)
+2. Edit the **body** of the report:
+  - Can you make a bulleted list?
+  - Add a [URL](https://bookdown.org/yihui/rmarkdown/)?
 
-Edit the body of the report:
-- Can you make a bulleted list?
-- Add a [URL](https://bookdown.org/yihui/rmarkdown/)?
+3. Tidy up the **code chunks**:
+  - Hide package loading messages
+  - Change figure size
 
-Tidy up the code chunks:
-- Hide package loading messages
-- Change figure size
+### If you've used RMarkdown before - what are some things you always change?
+
 ---
 
 # Polyglot Markdown!
 
 You can use languages other than R in your code chunks. Python, bash, SQL, Ruby, they're all options!
 
-R chunk: 
+**R chunk** `{r}`
 ```{r}
 # Here's a normal R chunk, setting up a SQL database connection
 library(DBI)
@@ -147,7 +193,7 @@ library(reclues)
 con <- reclues::get_db()
 ```
 
-SQL chunk: 
+**SQL chunk** `{sql comment='--', connection=con}`
 ```{sql comment='--', connection=con}
 -- Chunk options: "{sql comment='--', connection=con}"
 select * from crime_scene_report limit 2
@@ -173,10 +219,12 @@ str(reports)
 
 The RStudio IDE now has background jobs! Cool! The main idea is to use the Jobs pane (next to Console) to run an Rscript in the background and return the results to your R session.
 
-Why use background jobs?
+Why use background jobs with R Markdown?
 * Frees up the console so you can keep working in the same session
+
 * Another option for parallelization, you can have multiple background jobs running
-* You're training models, and they're verrrrryyyy slowww.... or verrrryyyy verboooooseeeee.... or both (I'm looking at you Stan)!
+
+* You're training models in a notebook, and they're very slow, or very verbose ... or both (I'm looking at you Stan)!
 ---
 
 # Background Jobs
@@ -195,14 +243,46 @@ We'll use the `callr` package:
 
 * Your code must be wrapped up as a function using `r_bg()`
 * You need to explicity give `r_bg()` anything from the GE that it needs to run
-* Capture messages and errors by specifying .err and .out files
+* Capture messages and errors by specifying .err and .out files (optional)
+* Running the code chunk submits the job
 
-```{r}
+```{r eval=FALSE}
 library(callr)
 
-
+slow_code <- r_bg(function(x) {
+  
+  message("Going to wait a bit so we can see the results of $is.alive()")
+  Sys.sleep(60)
+  
+  crime_summary <- x %>% 
+    group_by(type) %>% 
+    summarize(occurances= n())
+  
+  return(crime_summary)
+  },
+args = list(x = reports), #reports is a dataframe in our global environment
+stdout = "./tmp/callr_example.out",
+stderr = "./tmp/callr_example.err"
+  )
 ```
 
+---
+
+# Background Jobs
+
+* Check the status of your job with `$is.alive()`
+
+```{r eval=FALSE}
+slow_code$is.alive()
+```
+
+* Tip: put your job objects in a list and use `purrr:map(job_list, function(x) x$is.alive)` to quickly see how they're all doing
+
+* Once the job is dead (either finished or errored out), use $get_result() to return the result to your environment
+
+```{r eval=FALSE}
+crime_summary <- slow_code$get_result()
+```
 
 ---
 
@@ -223,14 +303,18 @@ library(callr)
 **A.**  Parameterized reports to the rescue! Make a template file, set your variables (e.g. sample name & filepath, or month) in the YAML header, and knit!
 
 ---
-**Tip**  You can use RMarkdown notebooks like a paper lab notebook, or a polished protocol, but its hard to make a single notebook do both well. 
-
-a log of what you've tried and what you conclude about the results of each experiment. You can also use them more like a lab protocol or Methods section, where you take the final version and 
----
 
 # Resources
-https://rmarkdown.rstudio.com/index.html
-https://bookdown.org/yihui/rmarkdown-cookbook/
-https://bookdown.org/yihui/rmarkdown/
 
----
+### [The Cheatsheet](https://rmarkdown.rstudio.com/lesson-15.html)
+
+### General
+* [RStudio's Guide to R Markdown](https://rmarkdown.rstudio.com/index.html)  
+* [RStudio's R Markdown resources, e.g. videos](https://resources.rstudio.com/r-markdown)
+* [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)  
+* [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/)
+
+### Tutorials
+* [Communicating with R Markdown Workshop materials](https://ysc-rmarkdown.netlify.com/)
+* [Allison Hill's "Summer of Blogdown"](https://rpubs.com/joycecahoon/blogdown-intro)
+* [David Robinson's screencasts, watch someone use R Notebooks!](https://www.youtube.com/user/safe4democracy/featured)
