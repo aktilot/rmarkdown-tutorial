@@ -252,7 +252,7 @@ library(callr)
 slow_code <- r_bg(function(x) {
   require(magrittr) # need to either use package::function() or require()
   require(dplyr)
-  message("Going to wait a bit so we can see the results of $is.alive()")
+  message("Going to wait a bit so we can see the results of $is_alive()")
   Sys.sleep(60)
   
   crime_summary <- x %>% 
@@ -271,13 +271,13 @@ stderr = "./tmp/callr_example.err"
 
 # Background Jobs
 
-* Check the status of your job with `$is.alive()`
+* Check the status of your job with `$is_alive()`
 
 ```{r eval=FALSE}
-slow_code$is.alive()
+slow_code$is_alive()
 ```
 
-* Tip: put your job objects in a list and use `purrr:map(job_list, function(x) x$is.alive)` to quickly see how they're all doing
+* Tip: put your job objects in a list and use `purrr:map(job_list, function(x) x$is_alive())` to quickly see how they're all doing
 
 * Once the job is dead (either finished or errored out), use $get_result() to return the result to your environment
 

@@ -48,7 +48,7 @@ We'll use the `callr` package:
 slow_code <- r_bg(function(x) {
   require(magrittr)
   require(dplyr)
-  message("Going to wait a bit so we can see the results of $is.alive()")
+  message("Going to wait a bit so we can see the results of $is_alive()")
   Sys.sleep(60)
   
   crime_summary <- x %>% 
